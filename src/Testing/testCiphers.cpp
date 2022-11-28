@@ -11,14 +11,23 @@
 #include <string>
 
 bool testCipher( const Cipher& cipher, const CipherMode mode,
-          const std::string& inputText, const std::string& outputText)
-
-TEST_CASE("Playfair Cipher encryption", "[playfair]") {
-  PlayfairCipher cc{"hello"};
-  REQUIRE( cc.applyCipher("BOBISSOMESORTOFJUNIORCOMPLEXXENOPHONEONEZEROTHING", CipherMode::Encrypt) == "FHIQXLTLKLTLSUFNPQPKETFENIOLVSWLTFIAFTLAKOWATEQOKPPA");
+          const std::string& inputText, const std::string& outputText) {
+  return cipher.applyCipher(inputText, mode) == outputText;
 }
 
-TEST_CASE("Playfair Cipher decryption", "[playfair]") {
-  PlayfairCipher cc{"hello"};
-  REQUIRE( cc.applyCipher("FHIQXLTLKLTLSUFNPQPKETFENIOLVSWLTFIAFTLAKOWATEQOKPPA", CipherMode::Decrypt) == "BOBISXSOMESORTOFIUNIORCOMPLEXQXENOPHONEONEZEROTHINGZ");
+TEST_CASE("all Cipher encryption", "[ciphers]") {
+  std::string key{"key"};
+  std::string input{"hello"};
+
+  PlayfairCipher pc{key};
+  CaesarCipher cc{1}; // takes int key
+  VigenereCipher vc{key};
+
+  std::string ccOut{"IFMMP"};
+  std::string pcOut{"DBNVMI"};
+  std::string vcOut{"RIJVS"};
+
+  REQUIRE( testCipher(pc, CipherMode::Encrypt, input, pcOut) );
+  REQUIRE( testCipher(vc, CipherMode::Encrypt, input, vcOut) );
+  REQUIRE( testCipher(cc, CipherMode::Encrypt, input, ccOut) );
 }
